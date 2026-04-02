@@ -1,0 +1,35 @@
+{
+  "context_id": "ctx_stale_001",
+  "intent": "handoff",
+  "role": "assistant",
+  "project_id": "proj_memory_os",
+  "generated_at": "2026-04-01T12:00:00Z",
+  "sections": {
+    "identity": [
+      "User profile not yet committed."
+    ],
+    "relationship": [
+      "Long-running collaboration — details not yet committed to memory."
+    ],
+    "global_policies": [],
+    "active_project": [
+      "Project proj_memory_os: no committed state recorded yet. Memories pending approval."
+    ],
+    "relevant_decisions": [],
+    "procedures": [],
+    "recent_episodes": [],
+    "evidence": [],
+    "task_frame": null,
+    "strategic_next_actions": [],
+    "operational_next_actions": [],
+    "open_loops": [
+      "No committed memories — full handoff context unavailable until proposals are approved and committed."
+    ]
+  },
+  "token_budget": {
+    "target": 2000,
+    "used": 50,
+    "compression_level": "none"
+  },
+  "source_memories": []
+}

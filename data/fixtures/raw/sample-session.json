@@ -1,0 +1,64 @@
+{
+  "session_id": "sess_001",
+  "project_id": "proj_memory_os",
+  "started_at": "2026-04-01T09:00:00Z",
+  "ended_at": "2026-04-01T10:30:00Z",
+  "source": "fixture",
+  "metadata": { "context": "initial design session" },
+  "events": [
+    {
+      "event_id": "evt_001",
+      "event_type": "message",
+      "role": "user",
+      "content": "今後はすべてのAPIレスポンスにリクエストIDを含めるようにしてください。この方針で統一します。",
+      "occurred_at": "2026-04-01T09:00:10Z",
+      "sequence_num": 1,
+      "metadata": {}
+    },
+    {
+      "event_id": "evt_002",
+      "event_type": "message",
+      "role": "assistant",
+      "content": "了解しました。すべてのAPIレスポンスにX-Request-IDヘッダーを追加するよう実装します。",
+      "occurred_at": "2026-04-01T09:00:25Z",
+      "sequence_num": 2,
+      "metadata": {}
+    },
+    {
+      "event_id": "evt_003",
+      "event_type": "message",
+      "role": "user",
+      "content": "私はバックエンドエンジニアで、TypeScriptとPostgresを主に使っています。Goも書けます。",
+      "occurred_at": "2026-04-01T09:05:00Z",
+      "sequence_num": 3,
+      "metadata": {}
+    },
+    {
+      "event_id": "evt_004",
+      "event_type": "message",
+      "role": "user",
+      "content": "Memory OSのv0実装を覚えておいてください。今日からこのプロジェクトを本格的に進めます。",
+      "occurred_at": "2026-04-01T09:10:00Z",
+      "sequence_num": 4,
+      "metadata": {}
+    },
+    {
+      "event_id": "evt_005",
+      "event_type": "message",
+      "role": "assistant",
+      "content": "Memory OSのv0スコープ: raw ingest → proposal → commit → context build の基本パイプラインを実装します。",
+      "occurred_at": "2026-04-01T09:10:30Z",
+      "sequence_num": 5,
+      "metadata": {}
+    },
+    {
+      "event_id": "evt_006",
+      "event_type": "message",
+      "role": "user",
+      "content": "認証はv1以降で追加する決定をしました。v0はローカル開発専用です。",
+      "occurred_at": "2026-04-01T09:20:00Z",
+      "sequence_num": 6,
+      "metadata": {}
+    }
+  ]
+}

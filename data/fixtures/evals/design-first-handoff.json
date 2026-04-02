@@ -1,0 +1,37 @@
+{
+  "context_id": "ctx_design_first_01",
+  "intent": "handoff",
+  "role": "assistant",
+  "project_id": "proj_design_first",
+  "generated_at": "2026-04-01T12:00:00.000Z",
+  "sections": {
+    "identity": ["Backend engineer working on Memory OS since 2026"],
+    "relationship": [
+      "User sets design direction. Design locked before implementation.",
+      "Architecture reviews required for all features before coding begins."
+    ],
+    "global_policies": ["All writes go through proposal → approval → commit pipeline"],
+    "active_project": ["Memory OS v0 handoff evaluator active development"],
+    "relevant_decisions": [
+      "Evaluator schema locked for v0 — no breaking changes allowed",
+      "N-gram fingerprinting adopted for compound topic detection"
+    ],
+    "procedures": [],
+    "recent_episodes": [],
+    "evidence": [],
+    "task_frame": null,
+    "strategic_next_actions": [
+      "Build: evaluator test suite with full fixture coverage",
+      "Build: n-gram fingerprinting into topicFingerprint function",
+      "Build: integration test runner for all eval files",
+      "Build: relationship-consistency sub-check into scoreConsistency"
+    ],
+    "operational_next_actions": ["Run tsx evals/run-all.ts to verify all tests pass"],
+    "open_loops": []
+  },
+  "token_budget": { "target": 2000, "used": 320, "compression_level": "none" },
+  "source_memories": [
+    { "memory_id": "mem_d1", "score": 0.95, "trust_level": "t3_committed" },
+    { "memory_id": "mem_d2", "score": 0.90, "trust_level": "t3_committed" }
+  ]
+}

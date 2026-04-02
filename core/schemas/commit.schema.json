@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["commit_id", "proposal_id", "decision", "created_at"],
+  "properties": {
+    "commit_id": { "type": "string" },
+    "proposal_id": { "type": "string" },
+    "decision": {
+      "type": "string",
+      "enum": ["accepted", "rejected", "merged"]
+    },
+    "decided_by": {
+      "type": "string",
+      "enum": ["system", "human", "rule_engine"]
+    },
+    "decision_note": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "identity": { "propose": true, "auto_approve": false, "human_required": true },
+  "relationship": { "propose": true, "auto_approve": false, "human_required": true },
+  "goal": { "propose": true, "auto_approve": false, "human_required": true },
+  "policy": { "propose": true, "auto_approve": false, "human_required": true },
+  "preference": { "propose": true, "auto_approve": "conditional", "human_required": false },
+  "project_state": { "propose": true, "auto_approve": "conditional", "human_required": false },
+  "procedure": { "propose": true, "auto_approve": false, "human_required": true },
+  "decision": { "propose": true, "auto_approve": false, "human_required": true },
+  "episode": { "propose": true, "auto_approve": true, "human_required": false },
+  "evidence": { "propose": true, "auto_approve": true, "human_required": false },
+  "artifact_reference": { "propose": true, "auto_approve": true, "human_required": false },
+  "handoff_summary": { "propose": true, "auto_approve": true, "human_required": false }
+}

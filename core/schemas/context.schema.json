@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["context_id", "intent", "role", "generated_at", "sections", "token_budget", "source_memories"],
+  "properties": {
+    "context_id": { "type": "string" },
+    "intent": { "type": "string" },
+    "role": { "type": "string" },
+    "project_id": { "type": ["string", "null"] },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "sections": {
+      "type": "object",
+      "required": ["identity", "relationship", "global_policies", "active_project", "relevant_decisions", "procedures", "recent_episodes", "evidence", "task_frame"],
+      "properties": {
+        "identity": { "type": "array", "items": { "type": "string" } },
+        "relationship": { "type": "array", "items": { "type": "string" } },
+        "global_policies": { "type": "array", "items": { "type": "string" } },
+        "active_project": { "type": "array", "items": { "type": "string" } },
+        "relevant_decisions": { "type": "array", "items": { "type": "string" } },
+        "procedures": { "type": "array", "items": { "type": "string" } },
+        "recent_episodes": { "type": "array", "items": { "type": "string" } },
+        "evidence": { "type": "array", "items": { "type": "string" } },
+        "task_frame": { "type": ["string", "null"] },
+        "strategic_next_actions": { "type": "array", "items": { "type": "string" } },
+        "operational_next_actions": { "type": "array", "items": { "type": "string" } },
+        "open_loops": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "token_budget": {
+      "type": "object",
+      "required": ["target", "used", "compression_level"],
+      "properties": {
+        "target": { "type": "integer", "minimum": 0 },
+        "used": { "type": "integer", "minimum": 0 },
+        "compression_level": { "type": "string", "enum": ["none", "light", "aggressive"] }
+      }
+    },
+    "source_memories": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["memory_id", "score", "trust_level"],
+        "properties": {
+          "memory_id": { "type": "string" },
+          "score": { "type": "number", "minimum": 0, "maximum": 1 },
+          "trust_level": { "type": "string" }
+        }
+      }
+    }
+  }
+}

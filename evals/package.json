@@ -1,0 +1,27 @@
+{
+  "name": "@memory-os/evals",
+  "version": "0.1.0",
+  "scripts": {
+    "test": "tsx run-all.ts",
+    "test:schema": "tsx schema-validation.test.ts",
+    "test:raw": "tsx raw-to-proposal.test.ts",
+    "test:commit": "tsx proposal-to-commit.test.ts",
+    "test:context": "tsx handoff-context.test.ts",
+    "test:mutations": "tsx mutation-fixtures.test.ts",
+    "test:repair": "tsx repair-loop.test.ts",
+    "eval:run": "tsx eval-run.ts"
+  },
+  "dependencies": {
+    "@memory-os/core-context": "workspace:*",
+    "@memory-os/core-memory": "workspace:*",
+    "@memory-os/core-policy": "workspace:*",
+    "ajv": "^8.16.0",
+    "ajv-formats": "^3.0.1",
+    "pg": "^8.12.0"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.11.6",
+    "tsx": "^4.7.0",
+    "typescript": "^5.4.0"
+  }
+}

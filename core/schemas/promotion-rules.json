@@ -1,0 +1,35 @@
+{
+  "thresholds": {
+    "to_validated": 0.4,
+    "to_committed": 0.7,
+    "to_canonical": 0.9
+  },
+  "weights": {
+    "importance": 0.3,
+    "reusability": 0.2,
+    "stability": 0.2,
+    "explicitness": 0.2,
+    "evidence_strength": 0.1
+  },
+  "explicit_signals": [
+    "覚えて",
+    "今後は",
+    "この方針で",
+    "ベースにする",
+    "長期的に"
+  ],
+  "auto_promote": {
+    "episode": true,
+    "evidence": true,
+    "artifact_reference": true,
+    "handoff_summary": true
+  },
+  "never_auto_promote": [
+    "identity",
+    "relationship",
+    "goal",
+    "policy",
+    "decision",
+    "procedure"
+  ]
+}

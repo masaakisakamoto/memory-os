@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": [
+    "memory_id",
+    "memory_type",
+    "content",
+    "created_at",
+    "trust_level",
+    "status"
+  ],
+  "properties": {
+    "memory_id": { "type": "string" },
+    "memory_type": {
+      "type": "string",
+      "enum": [
+        "identity",
+        "relationship",
+        "goal",
+        "policy",
+        "preference",
+        "project_state",
+        "procedure",
+        "episode",
+        "decision",
+        "evidence",
+        "artifact_reference",
+        "handoff_summary"
+      ]
+    },
+    "content": { "type": "string" },
+    "summary": { "type": "string" },
+    "trust_level": {
+      "type": "string",
+      "enum": ["t0_raw", "t1_extracted", "t2_validated", "t3_committed", "t4_human", "t5_canonical"]
+    },
+    "importance_score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "status": {
+      "type": "string",
+      "enum": ["active", "superseded", "invalidated"]
+    },
+    "valid_from": { "type": "string", "format": "date-time" },
+    "valid_to": { "type": ["string", "null"], "format": "date-time" },
+    "project_id": { "type": ["string", "null"] },
+    "source_refs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "lineage": {
+      "type": "object",
+      "properties": {
+        "parent_memory_id": { "type": ["string", "null"] },
+        "derived_from": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": ["string", "null"], "format": "date-time" }
+  }
+}

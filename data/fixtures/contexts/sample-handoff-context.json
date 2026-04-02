@@ -1,0 +1,60 @@
+{
+  "context_id": "ctx_001",
+  "intent": "handoff",
+  "role": "assistant",
+  "project_id": "proj_memory_os",
+  "generated_at": "2026-04-01T10:45:00Z",
+  "sections": {
+    "identity": [
+      "User is a backend engineer, primarily using TypeScript and Postgres, also writes Go."
+    ],
+    "relationship": [
+      "Collaborating on Memory OS v0 implementation since 2026-04-01."
+    ],
+    "global_policies": [
+      "All API responses must include a request ID (X-Request-ID header). Unified policy."
+    ],
+    "active_project": [
+      "Memory OS v0: building raw ingest → proposal → commit → context build pipeline."
+    ],
+    "relevant_decisions": [
+      "Authentication deferred to v1+. v0 is local development only (decided 2026-04-01)."
+    ],
+    "procedures": [],
+    "recent_episodes": [
+      "Initial design session (sess_001): defined v0 scope and core policies."
+    ],
+    "evidence": [],
+    "task_frame": "Continue Memory OS v0 implementation. Core pipeline scaffolded. Next: wire up integration tests and MCP server.",
+    "strategic_next_actions": [
+      "Implement MCP server integration with a real MCP SDK (currently scaffolded only)",
+      "Wire integration tests against Postgres for full pipeline coverage",
+      "[v1+] Authentication not yet implemented — deferred to v1+"
+    ],
+    "operational_next_actions": [
+      "Approve pending proposals and run commit-approved to persist to memories",
+      "Run rebuild-context-cache to generate next handoff artifact"
+    ],
+    "open_loops": [
+      "Authentication not yet implemented — deferred to v1+",
+      "MCP server scaffold not yet wired to a real MCP SDK"
+    ]
+  },
+  "token_budget": {
+    "target": 2000,
+    "used": 460,
+    "compression_level": "none"
+  },
+  "source_memories": [
+    {
+      "memory_id": "mem_001",
+      "score": 0.95,
+      "trust_level": "t3_committed"
+    },
+    {
+      "memory_id": "mem_002",
+      "score": 0.88,
+      "trust_level": "t3_committed"
+    }
+  ]
+}

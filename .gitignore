@@ -1,0 +1,25 @@
+# dependencies
+node_modules/
+
+# build
+dist/
+
+# env
+.env
+.env.local
+
+# logs（全部無視）
+logs/
+
+# data raw（空ディレクトリだけ残す）
+data/raw/*
+!data/raw/.gitkeep
+
+# fixturesは残す
+!data/fixtures/**
+
+# source maps
+*.js.map
+
+# system
+.DS_Store

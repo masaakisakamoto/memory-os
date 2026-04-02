@@ -1,0 +1,51 @@
+{
+  "context_id": "ctx_noisy_001",
+  "intent": "handoff",
+  "role": "assistant",
+  "project_id": "proj_memory_os",
+  "generated_at": "2026-04-01T12:00:00Z",
+  "sections": {
+    "identity": [
+      "User is a backend engineer."
+    ],
+    "relationship": [
+      "私はバックエンドエンジニアで、TypeScriptとPostgresを主に使っています。Goも書けます。"
+    ],
+    "global_policies": [
+      "All API responses must include a request ID."
+    ],
+    "active_project": [
+      "今後はすべてのAPIレスポンスにX-Request-IDを含めるようにしてください。この方針で統一します。"
+    ],
+    "relevant_decisions": [
+      "Authentication deferred to v1+.",
+      "Use TypeScript strict mode for all packages.",
+      "Monorepo with pnpm workspaces chosen as build system."
+    ],
+    "procedures": [],
+    "recent_episodes": [],
+    "evidence": [],
+    "task_frame": null,
+    "strategic_next_actions": [
+      "Approve pending policy proposal (prop_xyz): enforce X-Request-ID on all responses",
+      "Maintain: TypeScript strict mode across all packages",
+      "Pursue: monorepo architecture goals via pnpm workspaces"
+    ],
+    "operational_next_actions": [
+      "Approve pending identity proposal (prop_abc): user profile update",
+      "Run rebuild-context-cache after next commit"
+    ],
+    "open_loops": []
+  },
+  "token_budget": {
+    "target": 2000,
+    "used": 280,
+    "compression_level": "none"
+  },
+  "source_memories": [
+    { "memory_id": "mem_001", "score": 0.90, "trust_level": "t3_committed" },
+    { "memory_id": "mem_002", "score": 0.85, "trust_level": "t3_committed" },
+    { "memory_id": "mem_003", "score": 0.82, "trust_level": "t3_committed" },
+    { "memory_id": "mem_004", "score": 0.78, "trust_level": "t3_committed" }
+  ]
+}

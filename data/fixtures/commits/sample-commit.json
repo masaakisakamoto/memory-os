@@ -1,0 +1,8 @@
+{
+  "commit_id": "commit_001",
+  "proposal_id": "prop_001",
+  "decision": "accepted",
+  "decided_by": "human",
+  "decision_note": "Policy confirmed as intentional and durable.",
+  "created_at": "2026-04-01T10:40:00Z"
+}

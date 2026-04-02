@@ -1,0 +1,22 @@
+{
+  "name": "@memory-os/api",
+  "version": "0.1.0",
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js"
+  },
+  "dependencies": {
+    "@memory-os/core-context": "workspace:*",
+    "@memory-os/core-memory": "workspace:*",
+    "@memory-os/core-retrieval": "workspace:*",
+    "fastify": "^4.27.0",
+    "pg": "^8.12.0"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.11.6",
+    "tsx": "^4.7.0",
+    "typescript": "^5.4.0"
+  }
+}

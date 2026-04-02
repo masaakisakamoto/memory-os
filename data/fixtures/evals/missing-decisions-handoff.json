@@ -1,0 +1,42 @@
+{
+  "context_id": "ctx_nodecisions_001",
+  "intent": "handoff",
+  "role": "assistant",
+  "project_id": "proj_memory_os",
+  "generated_at": "2026-04-01T12:00:00Z",
+  "sections": {
+    "identity": [
+      "User is a backend engineer primarily using TypeScript and Postgres."
+    ],
+    "relationship": [
+      "Collaboration on Memory OS since April 2026."
+    ],
+    "global_policies": [
+      "All API responses must include X-Request-ID header."
+    ],
+    "active_project": [
+      "Memory OS v0 implementation in progress. Core ingestion pipeline working."
+    ],
+    "relevant_decisions": [],
+    "procedures": [],
+    "recent_episodes": [],
+    "evidence": [],
+    "task_frame": null,
+    "strategic_next_actions": [],
+    "operational_next_actions": [
+      "Approve pending identity proposal (prop_abc123): User is backend engineer",
+      "Run rebuild-context-cache after new commits"
+    ],
+    "open_loops": []
+  },
+  "token_budget": {
+    "target": 2000,
+    "used": 150,
+    "compression_level": "none"
+  },
+  "source_memories": [
+    { "memory_id": "mem_001", "score": 0.90, "trust_level": "t3_committed" },
+    { "memory_id": "mem_002", "score": 0.85, "trust_level": "t3_committed" },
+    { "memory_id": "mem_003", "score": 0.80, "trust_level": "t3_committed" }
+  ]
+}
