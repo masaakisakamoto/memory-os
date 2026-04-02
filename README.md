@@ -121,3 +121,12 @@ node apps/worker/dist/worker.js rebuild-context-cache --repair
 ## License
 
 - MIT
+
+---
+
+## Author
+
+Masaaki Sakamoto  
+https://masaaki.ai
+
+Building systems for Human × AI continuity.
