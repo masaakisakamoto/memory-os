@@ -107,6 +107,7 @@ node apps/worker/dist/worker.js rebuild-context-cache --project=proj_memory_os
 pnpm --filter @memory-os/evals run eval:run
 
 node apps/worker/dist/worker.js rebuild-context-cache --repair
+```
 
 ---
 
