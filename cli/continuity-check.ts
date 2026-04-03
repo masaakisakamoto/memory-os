@@ -9,6 +9,27 @@ import type {
   PromptDraft,
   DecisionRecord,
 } from "../core/continuity-v2/types"
+import Ajv from "ajv"
+import addFormats from "ajv-formats"
+
+let _promptDraftValidate: ((data: unknown) => boolean) | null = null
+
+function getPromptDraftValidator() {
+  if (_promptDraftValidate) return _promptDraftValidate
+
+  const schemaPath = path.join(
+    process.cwd(),
+    "core/continuity-v2/contracts/prompt-draft.schema.json",
+  )
+
+  const schema = JSON.parse(fs.readFileSync(schemaPath, "utf-8"))
+
+  const ajv = new Ajv({ allErrors: true, strict: true })
+  addFormats(ajv)
+
+  _promptDraftValidate = ajv.compile(schema)
+  return _promptDraftValidate
+}
 
 type InputSource = "text" | "stdin" | "input_file"
 type InputFormat = "raw_text" | "prompt_draft_json"
@@ -95,7 +116,7 @@ function parseArgs(argv: string[]): CliArgs {
     if (a === "--text") text = argv[++i]
     else if (a === "--stdin") useStdin = true
     else if (a === "--input-file") inputFile = argv[++i]
-    else if (a === "--input-format") inputFormat = argv[++i] as any
+    else if (a === "--input-format") inputFormat = argv[++i] as "auto" | InputFormat
     else if (a === "--project-id") projectId = argv[++i]
     else if (a === "--session-id") sessionId = argv[++i]
     else if (a === "--draft-id") draftId = argv[++i]
@@ -140,6 +161,16 @@ function detectFormat(file: string, mode: string): InputFormat {
   return file.endsWith(".json") ? "prompt_draft_json" : "raw_text"
 }
 
+function detectLanguage(text: string): PromptDraft["detected_language"] {
+  const hasJa = /[ぁ-んァ-ン一-龠]/.test(text)
+  const hasEn = /[A-Za-z]/.test(text)
+
+  if (hasJa && hasEn) return "mixed"
+  if (hasJa) return "ja"
+  if (hasEn) return "en"
+  return "unknown"
+}
+
 function buildDraft(text: string, args: CliArgs): PromptDraft {
   return {
     draft_id: args.draftId,
@@ -148,7 +179,7 @@ function buildDraft(text: string, args: CliArgs): PromptDraft {
     raw_text: text,
     normalized_text: text,
     normalization_version: "phase0.1",
-    detected_language: /[ぁ-ん]/.test(text) ? "ja" : "en",
+    detected_language: detectLanguage(text),
     created_at: new Date().toISOString(),
     token_estimate: Math.ceil(text.length / 4),
   }
@@ -163,10 +194,17 @@ async function main() {
     args.inputFile ? 1 : 0,
   ].reduce((a, b) => a + b, 0)
 
-  if (sources === 0)
-    fail("INPUT_SOURCE_MISSING", "Prompt input is required.", args, "text", "raw_text")
+  if (sources === 0) {
+    fail(
+      "INPUT_SOURCE_MISSING",
+      "Prompt input is required.",
+      args,
+      "text",
+      "raw_text",
+    )
+  }
 
-  if (sources > 1)
+  if (sources > 1) {
     fail(
       "INPUT_SOURCE_CONFLICT",
       "Exactly one input source must be provided.",
@@ -174,6 +212,7 @@ async function main() {
       "text",
       "raw_text",
     )
+  }
 
   let text = ""
   let source: InputSource = "text"
@@ -193,29 +232,76 @@ async function main() {
       ? args.inputFile
       : path.join(repoRoot, args.inputFile)
 
-    if (!fs.existsSync(abs))
-      fail("INPUT_FILE_READ_FAILED", "Failed to read input file.", args, source, format)
+    if (!fs.existsSync(abs)) {
+      fail(
+        "INPUT_FILE_READ_FAILED",
+        "Failed to read input file.",
+        args,
+        source,
+        format,
+      )
+    }
 
     format = detectFormat(abs, args.inputFormat)
 
     if (format === "raw_text") {
       text = fs.readFileSync(abs, "utf-8").trim()
     } else {
-      const json = readJson<PromptDraft>(abs)
+      let parsed: PromptDraft
+
+      try {
+        parsed = readJson<PromptDraft>(abs)
+      } catch {
+        fail(
+          "INPUT_FORMAT_INVALID",
+          "Input format is invalid for the provided file.",
+          args,
+          source,
+          format,
+        )
+      }
+
+      const validate = getPromptDraftValidator()
+      const valid = validate(parsed)
+
+      if (!valid) {
+        fail(
+          "PROMPT_DRAFT_INVALID",
+          "PromptDraft JSON is invalid.",
+          args,
+          source,
+          format,
+        )
+      }
+
+      if (parsed.project_id === null && args.projectId) {
+        parsed = {
+          ...parsed,
+          project_id: args.projectId,
+        }
+      }
+
       const ctx = buildContext(args)
-      const result = prePromptCheck({ draft: json, activeContext: ctx })
-      return output(result, args, source, format)
+      const result = prePromptCheck({ draft: parsed, activeContext: ctx })
+      return output(result, args, source, format, parsed)
     }
   }
 
-  if (!text)
-    fail("EMPTY_INPUT", "Prompt input is empty.", args, source, format)
+  if (!text) {
+    fail(
+      "EMPTY_INPUT",
+      "Prompt input is empty.",
+      args,
+      source,
+      format,
+    )
+  }
 
   const draft = buildDraft(text, args)
   const ctx = buildContext(args)
   const result = prePromptCheck({ draft, activeContext: ctx })
 
-  output(result, args, source, format)
+  output(result, args, source, format, draft)
 }
 
 function buildContext(args: CliArgs): ActiveContextSnapshot {
@@ -238,6 +324,7 @@ function output(
   args: CliArgs,
   source: InputSource,
   format: InputFormat,
+  draft: PromptDraft,
 ) {
   if (args.output === "json") {
     const out: CliOutput = {
@@ -245,9 +332,9 @@ function output(
       input: {
         source,
         input_format: format,
-        project_id: args.projectId,
-        session_id: args.sessionId,
-        draft_id: args.draftId,
+        project_id: draft.project_id,
+        session_id: draft.session_id,
+        draft_id: draft.draft_id,
       },
       result,
       error: null,
