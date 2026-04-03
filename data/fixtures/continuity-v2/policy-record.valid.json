@@ -1,0 +1,10 @@
+{
+  "policy_id": "pol_001",
+  "scope": "global",
+  "project_id": null,
+  "key": "memory_direct_write_forbidden",
+  "value": "true",
+  "status": "approved",
+  "approved_at": "2026-04-01T08:00:00Z",
+  "source_commit_id": "mem_commit_00091"
+}

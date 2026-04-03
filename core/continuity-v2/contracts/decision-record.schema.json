@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DecisionRecord",
+  "type": "object",
+  "required": [
+    "decision_id",
+    "project_id",
+    "category",
+    "key",
+    "value",
+    "status",
+    "approved_at",
+    "source_commit_id"
+  ],
+  "properties": {
+    "decision_id": { "type": "string", "minLength": 1 },
+    "project_id": { "type": "string", "minLength": 1 },
+    "category": { "type": "string", "minLength": 1 },
+    "key": { "type": "string", "minLength": 1 },
+    "value": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": ["approved"]
+    },
+    "approved_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source_commit_id": { "type": "string", "minLength": 1 }
+  },
+  "additionalProperties": false
+}

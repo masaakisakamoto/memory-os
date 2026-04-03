@@ -1,0 +1,11 @@
+{
+  "draft_id": "draft_001",
+  "session_id": "sess_001",
+  "project_id": "proj_memory_os",
+  "raw_text": "次は handoff quality を詰めたい",
+  "normalized_text": "次は handoff quality を詰めたい",
+  "normalization_version": "phase0.1",
+  "detected_language": "mixed",
+  "created_at": "2026-04-04T03:00:00Z",
+  "token_estimate": 12
+}

@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ContinuityLedgerEvent",
+  "type": "object",
+  "required": [
+    "event_id",
+    "event_type",
+    "session_id",
+    "project_id",
+    "related_ids",
+    "payload",
+    "created_at"
+  ],
+  "properties": {
+    "event_id": { "type": "string", "minLength": 1 },
+    "event_type": {
+      "type": "string",
+      "enum": ["prompt_checked", "issue_detected", "context_injected"]
+    },
+    "session_id": { "type": "string", "minLength": 1 },
+    "project_id": { "type": ["string", "null"] },
+    "related_ids": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "payload": {
+      "type": "object"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}

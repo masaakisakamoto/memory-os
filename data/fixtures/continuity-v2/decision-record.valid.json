@@ -1,0 +1,10 @@
+{
+  "decision_id": "dec_record_001",
+  "project_id": "proj_memory_os",
+  "category": "architecture",
+  "key": "core_concept",
+  "value": "Deterministic Continuity Infrastructure",
+  "status": "approved",
+  "approved_at": "2026-04-04T02:40:00Z",
+  "source_commit_id": "mem_commit_00099"
+}

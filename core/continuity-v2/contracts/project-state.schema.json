@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ProjectState",
+  "type": "object",
+  "required": [
+    "state_id",
+    "project_id",
+    "phase",
+    "summary",
+    "status_fields",
+    "approved_at",
+    "source_commit_id"
+  ],
+  "properties": {
+    "state_id": { "type": "string", "minLength": 1 },
+    "project_id": { "type": "string", "minLength": 1 },
+    "phase": { "type": "string", "minLength": 1 },
+    "summary": { "type": "string" },
+    "status_fields": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["key", "value"],
+        "properties": {
+          "key": { "type": "string", "minLength": 1 },
+          "value": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "approved_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source_commit_id": { "type": "string", "minLength": 1 }
+  },
+  "additionalProperties": false
+}

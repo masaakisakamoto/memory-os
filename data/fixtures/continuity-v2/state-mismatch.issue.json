@@ -1,0 +1,22 @@
+{
+  "issue_id": "iss_001",
+  "issue_type": "state_mismatch_confirmed",
+  "severity": "error",
+  "message": "Draft implies handoff quality is still incomplete, but approved state says score is already 100.",
+  "evidence": [
+    {
+      "source_type": "draft",
+      "source_id": "draft_001",
+      "field": "raw_text",
+      "value": "次は handoff quality を詰めたい"
+    },
+    {
+      "source_type": "approved_state",
+      "source_id": "state_001",
+      "field": "status_fields.handoff_quality_score",
+      "value": "100"
+    }
+  ],
+  "blocking": false,
+  "repairable": true
+}

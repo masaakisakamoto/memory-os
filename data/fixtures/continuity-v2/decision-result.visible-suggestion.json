@@ -1,0 +1,55 @@
+{
+  "decision_id": "dec_001",
+  "severity": "error",
+  "action": "allow_with_visible_suggestion",
+  "selectedInjectionBlocks": [
+    "cb_001"
+  ],
+  "explanationTrace": {
+    "trace_id": "trace_001",
+    "decision_id": "dec_001",
+    "entries": [
+      {
+        "step": 1,
+        "stage": "normalize",
+        "rule_id": "NRM-001",
+        "status": "skipped",
+        "summary": "Skipped normalization rule NRM-001",
+        "related_ids": ["draft_001"]
+      },
+      {
+        "step": 2,
+        "stage": "extract",
+        "rule_id": "DCL-STS-001",
+        "status": "applied",
+        "summary": "Extracted draft claim via DCL-STS-001",
+        "related_ids": ["clm_001"]
+      },
+      {
+        "step": 3,
+        "stage": "detect",
+        "rule_id": "DET-STM-001",
+        "status": "applied",
+        "summary": "Detected issue via DET-STM-001",
+        "related_ids": ["clm_001", "iss_001"]
+      },
+      {
+        "step": 4,
+        "stage": "inject",
+        "rule_id": "INJ-001",
+        "status": "applied",
+        "summary": "Selected context block(s)",
+        "related_ids": ["cb_001"]
+      },
+      {
+        "step": 5,
+        "stage": "decide",
+        "rule_id": "R-002",
+        "status": "applied",
+        "summary": "Selected action via R-002",
+        "related_ids": ["iss_001", "cb_001", "dec_001"]
+      }
+    ]
+  },
+  "created_at": "2026-04-04T03:00:01Z"
+}

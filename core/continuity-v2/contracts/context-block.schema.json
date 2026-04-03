@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ContextBlock",
+  "type": "object",
+  "required": [
+    "block_id",
+    "block_type",
+    "source_id",
+    "source_type",
+    "text",
+    "priority",
+    "token_estimate",
+    "silent_allowed",
+    "relevance_score"
+  ],
+  "properties": {
+    "block_id": { "type": "string", "minLength": 1 },
+    "block_type": {
+      "type": "string",
+      "enum": [
+        "project_identity",
+        "active_state",
+        "global_policy",
+        "relevant_decision"
+      ]
+    },
+    "source_id": { "type": "string", "minLength": 1 },
+    "source_type": {
+      "type": "string",
+      "enum": ["project", "state", "policy", "decision"]
+    },
+    "text": { "type": "string" },
+    "priority": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "token_estimate": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "silent_allowed": { "type": "boolean" },
+    "relevance_score": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100
+    }
+  },
+  "additionalProperties": false
+}

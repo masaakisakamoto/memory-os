@@ -1,0 +1,18 @@
+{
+  "state_id": "state_001",
+  "project_id": "proj_memory_os",
+  "phase": "v2_design",
+  "summary": "Memory OS is in v2 design phase",
+  "status_fields": [
+    {
+      "key": "handoff_quality_score",
+      "value": "100"
+    },
+    {
+      "key": "evaluator_v1_complete",
+      "value": "true"
+    }
+  ],
+  "approved_at": "2026-04-04T02:50:00Z",
+  "source_commit_id": "mem_commit_001"
+}

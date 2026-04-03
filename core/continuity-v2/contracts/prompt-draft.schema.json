@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PromptDraft",
+  "type": "object",
+  "required": [
+    "draft_id",
+    "session_id",
+    "project_id",
+    "raw_text",
+    "normalized_text",
+    "normalization_version",
+    "detected_language",
+    "created_at",
+    "token_estimate"
+  ],
+  "properties": {
+    "draft_id": { "type": "string", "minLength": 1 },
+    "session_id": { "type": "string", "minLength": 1 },
+    "project_id": { "type": ["string", "null"] },
+    "raw_text": { "type": "string" },
+    "normalized_text": { "type": "string" },
+    "normalization_version": {
+      "type": "string",
+      "enum": ["phase0.1"]
+    },
+    "detected_language": {
+      "type": "string",
+      "enum": ["ja", "en", "mixed", "unknown"]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "token_estimate": {
+      "type": "integer",
+      "minimum": 0
+    }
+  },
+  "additionalProperties": false
+}

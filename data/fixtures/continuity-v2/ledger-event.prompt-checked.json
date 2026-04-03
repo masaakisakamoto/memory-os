@@ -1,0 +1,17 @@
+{
+  "event_id": "evt_001",
+  "event_type": "prompt_checked",
+  "session_id": "sess_001",
+  "project_id": "proj_memory_os",
+  "related_ids": [
+    "draft_001",
+    "iss_001",
+    "dec_001"
+  ],
+  "payload": {
+    "action": "allow_with_visible_suggestion",
+    "severity": "error",
+    "selectedInjectionBlocks": ["cb_001"]
+  },
+  "created_at": "2026-04-04T03:00:01Z"
+}
