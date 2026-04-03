@@ -10,133 +10,110 @@ import type {
   DecisionRecord,
 } from "../core/continuity-v2/types"
 
+type InputSource = "text" | "stdin" | "input_file"
+type InputFormat = "raw_text" | "prompt_draft_json"
+type OutputMode = "pretty" | "json"
+
 type CliArgs = {
   text: string | null
+  useStdin: boolean
+  inputFile: string | null
+  inputFormat: "auto" | InputFormat
   projectId: string
   sessionId: string
   draftId: string
-  useStdin: boolean
   stateFile: string
   globalPoliciesFile: string | null
   projectPoliciesFile: string | null
   activeDecisionsFile: string | null
-  output: "json" | "pretty"
+  output: OutputMode
+}
+
+type CliOutput = {
+  ok: boolean
+  input: {
+    source: InputSource
+    input_format: InputFormat
+    project_id: string | null
+    session_id: string
+    draft_id: string
+  }
+  result: ReturnType<typeof prePromptCheck> | null
+  error: {
+    code: string
+    message: string
+  } | null
 }
 
 const repoRoot = process.cwd()
 const fixturesDir = path.join(repoRoot, "data/fixtures/continuity-v2")
 
-function printHelp(): void {
-  console.log(`
-Usage:
-  pnpm tsx cli/continuity-check.ts --text "次は handoff quality を詰めたい"
-  echo "これを進めたい" | pnpm tsx cli/continuity-check.ts --stdin
-  pnpm continuity-check --text "approveなしで反映して"
-
-Options:
-  --text <text>                   Prompt text to check
-  --stdin                         Read prompt text from stdin
-  --project-id <id>               Project ID (default: proj_memory_os)
-  --session-id <id>               Session ID (default: cli_session_001)
-  --draft-id <id>                 Draft ID (default: cli_draft_001)
-  --state-file <path>             ProjectState JSON path
-  --global-policies-file <path>   PolicyRecord[] JSON path
-  --project-policies-file <path>  PolicyRecord[] JSON path
-  --active-decisions-file <path>  DecisionRecord[] JSON path
-  --output <json|pretty>          Output format (default: pretty)
-  --help                          Show this help
-`.trim())
+function fail(
+  code: string,
+  message: string,
+  args: CliArgs,
+  source: InputSource,
+  format: InputFormat,
+): never {
+  if (args.output === "json") {
+    const out: CliOutput = {
+      ok: false,
+      input: {
+        source,
+        input_format: format,
+        project_id: args.projectId,
+        session_id: args.sessionId,
+        draft_id: args.draftId,
+      },
+      result: null,
+      error: { code, message },
+    }
+    console.log(JSON.stringify(out, null, 2))
+  } else {
+    console.error(message)
+  }
+  process.exit(1)
 }
 
 function parseArgs(argv: string[]): CliArgs {
   let text: string | null = null
+  let useStdin = false
+  let inputFile: string | null = null
+  let inputFormat: "auto" | InputFormat = "auto"
   let projectId = "proj_memory_os"
   let sessionId = "cli_session_001"
   let draftId = "cli_draft_001"
-  let useStdin = false
   let stateFile = path.join(fixturesDir, "project-state.valid.json")
   let globalPoliciesFile: string | null = null
   let projectPoliciesFile: string | null = null
   let activeDecisionsFile: string | null = null
-  let output: "json" | "pretty" = "pretty"
+  let output: OutputMode = "pretty"
 
-  for (let i = 0; i < argv.length; i += 1) {
-    const arg = argv[i]
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i]
 
-    if (arg === "--help") {
-      printHelp()
-      process.exit(0)
-    }
-
-    if (arg === "--stdin") {
-      useStdin = true
-      continue
-    }
-
-    if (arg === "--text") {
-      text = argv[i + 1] ?? null
-      i += 1
-      continue
-    }
-
-    if (arg === "--project-id") {
-      projectId = argv[i + 1] ?? projectId
-      i += 1
-      continue
-    }
-
-    if (arg === "--session-id") {
-      sessionId = argv[i + 1] ?? sessionId
-      i += 1
-      continue
-    }
-
-    if (arg === "--draft-id") {
-      draftId = argv[i + 1] ?? draftId
-      i += 1
-      continue
-    }
-
-    if (arg === "--state-file") {
-      stateFile = argv[i + 1] ?? stateFile
-      i += 1
-      continue
-    }
-
-    if (arg === "--global-policies-file") {
-      globalPoliciesFile = argv[i + 1] ?? null
-      i += 1
-      continue
-    }
-
-    if (arg === "--project-policies-file") {
-      projectPoliciesFile = argv[i + 1] ?? null
-      i += 1
-      continue
-    }
-
-    if (arg === "--active-decisions-file") {
-      activeDecisionsFile = argv[i + 1] ?? null
-      i += 1
-      continue
-    }
-
-    if (arg === "--output") {
-      const value = argv[i + 1]
-      if (value === "json" || value === "pretty") {
-        output = value
-      }
-      i += 1
-      continue
-    }
+    if (a === "--text") text = argv[++i]
+    else if (a === "--stdin") useStdin = true
+    else if (a === "--input-file") inputFile = argv[++i]
+    else if (a === "--input-format") inputFormat = argv[++i] as any
+    else if (a === "--project-id") projectId = argv[++i]
+    else if (a === "--session-id") sessionId = argv[++i]
+    else if (a === "--draft-id") draftId = argv[++i]
+    else if (a === "--state-file") stateFile = argv[++i]
+    else if (a === "--global-policies-file") globalPoliciesFile = argv[++i]
+    else if (a === "--project-policies-file") projectPoliciesFile = argv[++i]
+    else if (a === "--active-decisions-file") activeDecisionsFile = argv[++i]
+    else if (a === "--output") output = argv[++i] as OutputMode
   }
 
   return {
     text,
+    useStdin,
+    inputFile,
+    inputFormat,
     projectId,
     sessionId,
     draftId,
-    useStdin,
     stateFile,
     globalPoliciesFile,
     projectPoliciesFile,
@@ -145,185 +122,147 @@ function parseArgs(argv: string[]): CliArgs {
   }
 }
 
-async function readStdin(): Promise<string> {
-  return await new Promise((resolve, reject) => {
+function readStdin(): Promise<string> {
+  return new Promise((resolve) => {
     let data = ""
-
-    process.stdin.setEncoding("utf8")
-    process.stdin.on("data", (chunk) => {
-      data += chunk
-    })
-    process.stdin.on("end", () => {
-      resolve(data.trim())
-    })
-    process.stdin.on("error", (error) => {
-      reject(error)
-    })
+    process.stdin.on("data", (c) => (data += c))
+    process.stdin.on("end", () => resolve(data.trim()))
   })
 }
 
-function readJsonFile<T>(filePath: string): T {
-  const absolutePath = path.isAbsolute(filePath)
-    ? filePath
-    : path.join(repoRoot, filePath)
-
-  return JSON.parse(fs.readFileSync(absolutePath, "utf-8")) as T
+function readJson<T>(p: string): T {
+  return JSON.parse(fs.readFileSync(p, "utf-8"))
 }
 
-function maybeReadJsonArrayFile<T>(filePath: string | null): T[] {
-  if (!filePath) return []
-  return readJsonFile<T[]>(filePath)
+function detectFormat(file: string, mode: string): InputFormat {
+  if (mode === "raw_text") return "raw_text"
+  if (mode === "prompt_draft_json") return "prompt_draft_json"
+  return file.endsWith(".json") ? "prompt_draft_json" : "raw_text"
 }
 
-function estimateTokens(text: string): number {
-  const trimmed = text.trim()
-  if (trimmed.length === 0) return 0
-  return Math.ceil(trimmed.length / 4)
-}
-
-function detectLanguage(text: string): PromptDraft["detected_language"] {
-  const hasJa = /[ぁ-んァ-ン一-龠]/.test(text)
-  const hasEn = /[A-Za-z]/.test(text)
-
-  if (hasJa && hasEn) return "mixed"
-  if (hasJa) return "ja"
-  if (hasEn) return "en"
-  return "unknown"
-}
-
-function buildPromptDraft(input: {
-  draftId: string
-  sessionId: string
-  projectId: string
-  text: string
-}): PromptDraft {
+function buildDraft(text: string, args: CliArgs): PromptDraft {
   return {
-    draft_id: input.draftId,
-    session_id: input.sessionId,
-    project_id: input.projectId,
-    raw_text: input.text,
-    normalized_text: input.text,
+    draft_id: args.draftId,
+    session_id: args.sessionId,
+    project_id: args.projectId,
+    raw_text: text,
+    normalized_text: text,
     normalization_version: "phase0.1",
-    detected_language: detectLanguage(input.text),
+    detected_language: /[ぁ-ん]/.test(text) ? "ja" : "en",
     created_at: new Date().toISOString(),
-    token_estimate: estimateTokens(input.text),
+    token_estimate: Math.ceil(text.length / 4),
   }
 }
 
-function buildActiveContext(input: {
-  stateFile: string
-  globalPoliciesFile: string | null
-  projectPoliciesFile: string | null
-  activeDecisionsFile: string | null
-}): ActiveContextSnapshot {
-  const project = readJsonFile<ProjectState>(input.stateFile)
-  const globalPolicies = maybeReadJsonArrayFile<PolicyRecord>(input.globalPoliciesFile)
-  const projectPolicies = maybeReadJsonArrayFile<PolicyRecord>(input.projectPoliciesFile)
-  const activeDecisions = maybeReadJsonArrayFile<DecisionRecord>(input.activeDecisionsFile)
-
-  return {
-    project,
-    globalPolicies,
-    projectPolicies,
-    activeDecisions,
-  }
-}
-
-function toPrettyOutput(result: ReturnType<typeof prePromptCheck>): string {
-  const lines: string[] = []
-
-  lines.push("=== continuity-check result ===")
-  lines.push(`action: ${result.promptGuardResult.action}`)
-  lines.push(`decision severity: ${result.decision.severity}`)
-  lines.push(`issues: ${result.issues.length}`)
-  lines.push(`selected blocks: ${result.selectedBlocks.length}`)
-  lines.push("")
-
-  if (result.issues.length > 0) {
-    lines.push("[issues]")
-    for (const issue of result.issues) {
-      lines.push(`- ${issue.issue_type} (${issue.severity})`)
-      lines.push(`  ${issue.message}`)
-    }
-    lines.push("")
-  }
-
-  if (result.selectedBlocks.length > 0) {
-    lines.push("[selected blocks]")
-    for (const block of result.selectedBlocks) {
-      lines.push(`- ${block.block_type}: ${block.text}`)
-    }
-    lines.push("")
-  }
-
-  if (result.promptGuardResult.visible_message) {
-    lines.push("[visible message]")
-    lines.push(result.promptGuardResult.visible_message)
-    lines.push("")
-  }
-
-  if (result.promptGuardResult.blocked_reason) {
-    lines.push("[blocked reason]")
-    lines.push(result.promptGuardResult.blocked_reason)
-    lines.push("")
-  }
-
-  if (result.promptGuardResult.injected_context_text) {
-    lines.push("[injected context]")
-    lines.push(result.promptGuardResult.injected_context_text)
-    lines.push("")
-  }
-
-  lines.push("[decision trace]")
-  for (const entry of result.decision.explanationTrace.entries) {
-    lines.push(
-      `- step=${entry.step} stage=${entry.stage} rule=${entry.rule_id} status=${entry.status}`,
-    )
-  }
-
-  return lines.join("\n")
-}
-
-async function main(): Promise<void> {
+async function main() {
   const args = parseArgs(process.argv.slice(2))
 
-  const textFromStdin = args.useStdin ? await readStdin() : null
-  const finalText = (args.text ?? textFromStdin ?? "").trim()
+  const sources = [
+    args.text ? 1 : 0,
+    args.useStdin ? 1 : 0,
+    args.inputFile ? 1 : 0,
+  ].reduce((a, b) => a + b, 0)
 
-  if (!finalText) {
-    console.error("Error: prompt text is required. Use --text or --stdin.")
-    process.exit(1)
+  if (sources === 0)
+    fail("INPUT_SOURCE_MISSING", "Prompt input is required.", args, "text", "raw_text")
+
+  if (sources > 1)
+    fail(
+      "INPUT_SOURCE_CONFLICT",
+      "Exactly one input source must be provided.",
+      args,
+      "text",
+      "raw_text",
+    )
+
+  let text = ""
+  let source: InputSource = "text"
+  let format: InputFormat = "raw_text"
+
+  if (args.text) {
+    text = args.text
+    source = "text"
+    format = "raw_text"
+  } else if (args.useStdin) {
+    text = await readStdin()
+    source = "stdin"
+    format = "raw_text"
+  } else if (args.inputFile) {
+    source = "input_file"
+    const abs = path.isAbsolute(args.inputFile)
+      ? args.inputFile
+      : path.join(repoRoot, args.inputFile)
+
+    if (!fs.existsSync(abs))
+      fail("INPUT_FILE_READ_FAILED", "Failed to read input file.", args, source, format)
+
+    format = detectFormat(abs, args.inputFormat)
+
+    if (format === "raw_text") {
+      text = fs.readFileSync(abs, "utf-8").trim()
+    } else {
+      const json = readJson<PromptDraft>(abs)
+      const ctx = buildContext(args)
+      const result = prePromptCheck({ draft: json, activeContext: ctx })
+      return output(result, args, source, format)
+    }
   }
 
-  const draft = buildPromptDraft({
-    draftId: args.draftId,
-    sessionId: args.sessionId,
-    projectId: args.projectId,
-    text: finalText,
-  })
+  if (!text)
+    fail("EMPTY_INPUT", "Prompt input is empty.", args, source, format)
 
-  const activeContext = buildActiveContext({
-    stateFile: args.stateFile,
-    globalPoliciesFile: args.globalPoliciesFile,
-    projectPoliciesFile: args.projectPoliciesFile,
-    activeDecisionsFile: args.activeDecisionsFile,
-  })
+  const draft = buildDraft(text, args)
+  const ctx = buildContext(args)
+  const result = prePromptCheck({ draft, activeContext: ctx })
 
-  const result = prePromptCheck({
-    draft,
-    activeContext,
-  })
+  output(result, args, source, format)
+}
 
+function buildContext(args: CliArgs): ActiveContextSnapshot {
+  const project = readJson<ProjectState>(args.stateFile)
+  const globalPolicies = args.globalPoliciesFile
+    ? readJson<PolicyRecord[]>(args.globalPoliciesFile)
+    : []
+  const projectPolicies = args.projectPoliciesFile
+    ? readJson<PolicyRecord[]>(args.projectPoliciesFile)
+    : []
+  const activeDecisions = args.activeDecisionsFile
+    ? readJson<DecisionRecord[]>(args.activeDecisionsFile)
+    : []
+
+  return { project, globalPolicies, projectPolicies, activeDecisions }
+}
+
+function output(
+  result: ReturnType<typeof prePromptCheck>,
+  args: CliArgs,
+  source: InputSource,
+  format: InputFormat,
+) {
   if (args.output === "json") {
-    console.log(JSON.stringify(result, null, 2))
+    const out: CliOutput = {
+      ok: true,
+      input: {
+        source,
+        input_format: format,
+        project_id: args.projectId,
+        session_id: args.sessionId,
+        draft_id: args.draftId,
+      },
+      result,
+      error: null,
+    }
+    console.log(JSON.stringify(out, null, 2))
     return
   }
 
-  console.log(toPrettyOutput(result))
+  console.log("=== continuity-check result ===")
+  console.log(`action: ${result.promptGuardResult.action}`)
+  console.log(`severity: ${result.decision.severity}`)
+  console.log(`issues: ${result.issues.length}`)
 }
 
-main().catch((error) => {
-  console.error("continuity-check failed")
-  console.error(error)
+main().catch((e) => {
+  console.error(e)
   process.exit(1)
 })
