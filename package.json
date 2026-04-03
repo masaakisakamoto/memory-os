@@ -9,7 +9,8 @@
     "dev:worker": "pnpm --filter @memory-os/worker dev",
     "dev:mcp": "pnpm --filter @memory-os/mcp-server dev",
     "db:migrate": "node infra/db/migrations/run.js",
-    "db:seed": "node infra/db/seeds/run.js"
+    "db:seed": "node infra/db/seeds/run.js",
+    "continuity-check": "tsx cli/continuity-check.ts"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
