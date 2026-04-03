@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "prompt-guard-result.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "action",
+    "injected_context_text",
+    "visible_message",
+    "blocked_reason"
+  ],
+  "properties": {
+    "action": {
+      "type": "string",
+      "enum": [
+        "allow_no_injection",
+        "allow_with_silent_injection",
+        "allow_with_visible_suggestion",
+        "block_due_to_policy"
+      ]
+    },
+    "injected_context_text": {
+      "type": ["string", "null"]
+    },
+    "visible_message": {
+      "type": ["string", "null"]
+    },
+    "blocked_reason": {
+      "type": ["string", "null"]
+    }
+  }
+}
